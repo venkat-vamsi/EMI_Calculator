@@ -1,27 +1,28 @@
 :root{
-  --bg:#0b1220;
-  --card:#0f172a;
-  --muted:#94a3b8;
-  --text:#e5e7eb;
-  --ring:#1f2937;
+  --bg:#355872;
+  --card:#2c4563;
+  --muted:#b3d9ff;
+  --text:#e5f4ff;
+  --ring:#4a7ba7;
 
   --small:#22c55e;  /* green */
   --medium:#06b6d4; /* cyan */
   --large:#f59e0b;  /* amber */
   --mega:#ef4444;   /* red */
 
-  --shadow:0 10px 30px rgba(0,0,0,.35);
+  --shadow:0 10px 30px rgba(53, 88, 114, 0.35);
   --glow-small:0 0 18px rgba(34,197,94,.45);
   --glow-medium:0 0 18px rgba(6,182,212,.45);
   --glow-large:0 0 18px rgba(245,158,11,.45);
   --glow-mega:0 0 22px rgba(239,68,68,.6);
+  background-color: #9CD5FF;
 }
 
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
   margin:0; font-family:'Inter',system-ui,Segoe UI,Roboto,Arial,sans-serif;
-  background: radial-gradient(1200px 600px at 75% -10%, #172554 0%, transparent 60%) , var(--bg);
+  background: radial-gradient(1200px 600px at 75% -10%, #9CD5FF 0%, transparent 60%) , var(--bg);
   color:var(--text);
 }
 
@@ -34,8 +35,8 @@ body{
 
 .card{
   width:min(980px, 94vw);
-  background:linear-gradient(180deg, rgba(255,255,255,.04), transparent 40%) , var(--card);
-  border:1px solid #1f2a44;
+  background:linear-gradient(180deg, rgba(156,213,255,.1), transparent 40%) , var(--card);
+  border:1px solid #4a7ba7;
   border-radius:24px;
   box-shadow:var(--shadow);
   padding:24px 22px;
@@ -49,8 +50,8 @@ body{
 
 .badge{
   border-radius:999px; padding:10px 14px; font-weight:700; letter-spacing:.2px;
-  background:#111827; border:1px solid #1f2937; color:#cbd5e1;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.02);
+  background:#1a3d5c; border:1px solid #4a7ba7; color:#9CD5FF;
+  box-shadow: inset 0 0 0 1px rgba(156,213,255,.1);
 }
 .badge--small{ font-size:14px }
 
@@ -64,16 +65,16 @@ body{
 }
 .input-combo input{
   flex:1;
-  background:#0b1220; color:#e5e7eb; border:1px solid #1f2a44; border-radius:12px;
+  background:#1a3d5c; color:#e5f4ff; border:1px solid #4a7ba7; border-radius:12px;
   padding:14px 14px; font-size:16px; outline:none;
   transition:border-color .2s ease, box-shadow .2s ease;
 }
 .input-combo input:focus{
-  border-color:#334155; box-shadow:0 0 0 4px rgba(51,65,85,.35);
+  border-color:#9CD5FF; box-shadow:0 0 0 4px rgba(156,213,255,.2);
 }
 .input-combo select{
   min-width:130px;
-  background:#0b1220; color:#e5e7eb; border:1px solid #1f2a44; border-radius:12px;
+  background:#1a3d5c; color:#e5f4ff; border:1px solid #4a7ba7; border-radius:12px;
   padding:12px 12px; font-size:14px;
 }
 .hint{ color:#9fb0c7; margin:6px 2px 0; font-size:13px }
@@ -96,7 +97,7 @@ body{
   fill:none; stroke-linecap:round; stroke-width:22;
 }
 .arc--back{
-  stroke: #0b1220;
+  stroke: #1a3d5c;
   opacity:.9;
   filter: blur(1px);
 }
@@ -124,8 +125,8 @@ body{
   filter: drop-shadow(0 1px 3px rgba(0,0,0,.4));
 }
 .needle__hub{
-  fill:#0b1325; stroke:#cbd5e1; stroke-width:2;
-  filter: drop-shadow(0 2px 6px rgba(0,0,0,.5));
+  fill:#1a3d5c; stroke:#9CD5FF; stroke-width:2;
+  filter: drop-shadow(0 2px 6px rgba(53,88,114,.5));
 }
 .needle{
   transition: transform 600ms cubic-bezier(.22,.68,0,1.12);
@@ -149,10 +150,10 @@ input[type="range"]::-webkit-slider-thumb{
 
 .quick-picks{ display:flex; flex-wrap:wrap; gap:8px; margin-top:4px }
 .chip{
-  background:#0b1220; border:1px solid #1f2a44; color:#cbd5e1;
+  background:#1a3d5c; border:1px solid #4a7ba7; color:#9CD5FF;
   padding:8px 12px; border-radius:999px; cursor:pointer; font-weight:600;
 }
-.chip:hover{ border-color:#334155 }
+.chip:hover{ border-color:#9CD5FF }
 .chip--alert{ border-color:#7f1d1d; color:#fecaca; background:linear-gradient(180deg, rgba(127,29,29,.25), rgba(0,0,0,0)) }
 
 .footer{
@@ -167,10 +168,10 @@ input[type="range"]::-webkit-slider-thumb{
 .legend.mega{ background:var(--mega) }
 
 .btn{
-  background:#111827; color:#e5e7eb; border:1px solid #1f2a44; border-radius:12px;
+  background:#1a3d5c; color:#9CD5FF; border:1px solid #4a7ba7; border-radius:12px;
   padding:10px 14px; cursor:pointer; font-weight:700;
 }
-.btn:hover{ border-color:#334155 }
+.btn:hover{ border-color:#9CD5FF }
 .toast{
   opacity:0; transform:translateY(4px); transition:all .25s ease;
   margin-left:10px; color:#86efac; font-weight:700; font-size:13px;

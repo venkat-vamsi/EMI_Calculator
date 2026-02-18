@@ -11,9 +11,13 @@
             box-sizing: border-box;
         }
 
+        html, body {
+            height: 100%;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #355872 0%, #9CD5FF 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -36,7 +40,7 @@
         }
 
         .header h1 {
-            color: #667eea;
+            color: #355872;
             font-size: 2.2em;
             margin-bottom: 10px;
         }
@@ -65,11 +69,11 @@
             height: 100%;
             background: conic-gradient(
                 from 180deg,
-                #22c55e 0deg,      /* green - small */
-                #84cc16 45deg,     /* lime - medium start */
-                #eab308 90deg,     /* yellow - medium end */
-                #f59e0b 135deg,    /* amber - large start */
-                #ef4444 180deg     /* red - mega */
+                #22c55e 0deg,
+                #84cc16 45deg,
+                #eab308 90deg,
+                #f59e0b 135deg,
+                #ef4444 180deg
             );
             border-radius: 100% 100% 0 0;
             overflow: hidden;
@@ -150,8 +154,8 @@
         }
 
         .input-group input:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
+            border-color: #355872;
+            box-shadow: 0 0 10px rgba(53, 88, 114, 0.2);
         }
 
         .buttons {
@@ -171,14 +175,14 @@
         }
 
         .btn-analyze {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #355872 0%, #4a7ba7 100%);
             color: white;
             flex: 1;
         }
 
         .btn-analyze:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 8px 20px rgba(53, 88, 114, 0.3);
         }
 
         .btn-reset {
@@ -206,7 +210,7 @@
         .category-name {
             font-size: 1.5em;
             font-weight: 700;
-            color: #667eea;
+            color: #355872;
             margin-bottom: 8px;
         }
 
@@ -221,7 +225,7 @@
             background: white;
             padding: 12px;
             border-radius: 8px;
-            border-left: 4px solid #667eea;
+            border-left: 4px solid #355872;
         }
 
         .detail-label {
