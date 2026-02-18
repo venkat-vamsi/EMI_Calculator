@@ -1,141 +1,98 @@
-let emiChartInstance = null;
+(function(){
+	let chart = null;
 
-const currencyFormatter = new Intl.NumberFormat('en-IN', {
-  style: 'currency',
-  currency: 'INR',
-  maximumFractionDigits: 0
-});
+	function computeSchedule(P, annualRate, nMonths){
+		const labels = [];
+		const principalArr = [];
+		const interestArr = [];
+		const emiArr = [];
 
-document.getElementById('calcBtn').addEventListener('click', calculateEMI);
-document.getElementById('resetBtn').addEventListener('click', resetForm);
+		if(nMonths <= 0 || P <= 0) return {labels, principalArr, interestArr, emiArr};
 
-function calculateEMI() {
-  const P = parseFloat(document.getElementById('loan').value);
-  const annualRate = parseFloat(document.getElementById('rate').value);
-  const N = Math.floor(parseFloat(document.getElementById('term').value));
+		const r = (annualRate/100)/12;
+		let EMI = 0;
+		if(r === 0){
+			EMI = P / nMonths;
+		} else {
+			const pow = Math.pow(1 + r, nMonths);
+			EMI = P * r * pow / (pow - 1);
+		}
+		let remaining = P;
 
-  if (isNaN(P) || isNaN(annualRate) || isNaN(N) || P <= 0 || N <= 0) {
-    alert('Please enter valid positive values for loan and term. Interest can be zero.');
-    return;
-  }
+		for(let m=1; m<=nMonths; m++){
+			const interest = r === 0 ? 0 : remaining * r;
+			const principal = Math.max(0, EMI - interest);
+			labels.push(String(m));
+			principalArr.push(Number(principal.toFixed(2)));
+			interestArr.push(Number(interest.toFixed(2)));
+			emiArr.push(Number(EMI.toFixed(2)));
+			remaining = Math.max(0, remaining - principal);
+		}
+		return {labels, principalArr, interestArr, emiArr};
+	}
 
-  const R = annualRate / 12 / 100;
-  let EMI = R === 0 ? P / N : (P * R * Math.pow(1 + R, N)) / (Math.pow(1 + R, N) - 1);
+	function createChart(ctx){
+		return new Chart(ctx, {
+			type: 'bar',
+			data: {
+				labels: [],
+				datasets: [
+					{ label: 'Principal', data: [], backgroundColor: '#4A90E2', stack: 'stack1' },
+					{ label: 'Interest', data: [], backgroundColor: '#90CAF9', stack: 'stack1' },
+					{ label: 'EMI', data: [], type: 'line', borderColor: '#1C1C1E', backgroundColor: 'transparent', yAxisID: 'y1', fill: false, pointRadius: 0 }
+				]
+			},
+			options: {
+				scales: {
+					y: { stacked: true, title: { display:true, text:'Amount' }, beginAtZero:true },
+					y1: { position:'right', grid: { display:false }, title: { display:true, text:'EMI' }, beginAtZero:true }
+				},
+				plugins: { legend: { position: 'bottom' } },
+				maintainAspectRatio: false,
+				responsive: true
+			}
+		});
+	}
 
-  document.getElementById('result').innerText = `Your EMI is: ₹${EMI.toFixed(2)}`;
+	function updateChartValues(loan, rate, term){
+		if(!chart) return;
+		const schedule = computeSchedule(loan, rate, term);
+		chart.data.labels = schedule.labels;
+		chart.data.datasets[0].data = schedule.principalArr;
+		chart.data.datasets[1].data = schedule.interestArr;
+		chart.data.datasets[2].data = schedule.emiArr;
+		chart.update();
+	}
 
-  let balance = P;
-  const monthlyPrincipal = [];
-  const monthlyInterest = [];
-  const monthlyBalance = [];
-  const labels = [];
+	// init once DOM is ready
+	window.addEventListener('DOMContentLoaded', function(){
+		const canvas = document.getElementById('emiChart');
+		if(!canvas) return;
+		const ctx = canvas.getContext('2d');
 
-  for (let i = 1; i <= N; i++) {
-    const interest = R === 0 ? 0 : balance * R;
-    let principal = EMI - interest;
+		// ensure parent has a height (index.html sets .chart-wrap height)
+		const parent = canvas.parentElement;
+		if(parent && !parent.style.height) parent.style.height = parent.offsetHeight ? parent.offsetHeight + 'px' : '360px';
 
-    if (i === N) principal = balance; // final correction
+		chart = createChart(ctx);
 
-    balance -= principal;
+		// default small sample until parent posts real values
+		updateChartValues(50000, 5, 12);
+	});
 
-    monthlyPrincipal.push(principal);
-    monthlyInterest.push(interest);
-    monthlyBalance.push(balance); // ✅ record AFTER payment
-    labels.push(`M${i}`);
-  }
+	// listen for parent messages
+	window.addEventListener('message', function(ev){
+		try{
+			const msg = ev.data;
+			if(msg && msg.type === 'updateValues' && msg.data){
+				const loan = Number(msg.data.loan) || 0;
+				const rate = Number(msg.data.rate) || 0;
+				const term = Math.max(0, Math.floor(Number(msg.data.term) || 0));
+				// guard against huge term values (avoid performance issues)
+				const safeTerm = Math.min(term, 360);
+				updateChartValues(loan, rate, safeTerm);
+			}
+		}catch(e){}
+	}, false);
 
-  if (emiChartInstance) emiChartInstance.destroy();
-
-  const ctx = document.getElementById('emiChart').getContext('2d');
-
-  emiChartInstance = new Chart(ctx, {
-    data: {
-      labels: labels,
-      datasets: [
-        {
-          type: 'bar',
-          label: 'Principal',
-          data: monthlyPrincipal,
-          backgroundColor: '#355872',
-          hoverBackgroundColor: '#2e4f63',
-          stack: 'stack1',
-          borderRadius: 6,
-          order: 1
-        },
-        {
-          type: 'bar',
-          label: 'Interest',
-          data: monthlyInterest,
-          backgroundColor: '#9CD5FF',
-          hoverBackgroundColor: '#7fc8ff',
-          stack: 'stack1',
-          borderRadius: 6,
-          order: 1
-        },
-        {
-          type: 'line',
-          label: 'Remaining Balance',
-          data: monthlyBalance,
-          borderColor: '#7c3aed',
-          borderWidth: 3,
-          tension: 0.25,
-          fill: false,
-          yAxisID: 'yBalance',
-          pointRadius: 3,
-          pointHoverRadius: 6,
-          pointBackgroundColor: '#7c3aed',
-          pointHoverBackgroundColor: '#4c1d95',
-          order: 99 // ensures line is drawn above bars
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        title: {
-          display: true,
-          text: 'Monthly EMI Breakdown with Remaining Balance',
-          font: { size: 16, weight: '600' },
-          color: '#0f172a'
-        },
-        tooltip: {
-          mode: 'index',
-          intersect: false,
-          callbacks: {
-            label: function(context) {
-              const label = context.dataset.label || '';
-              const value = context.raw;
-              if (label.includes('Balance')) {
-                const paidPercent = ((P - value) / P * 100).toFixed(2);
-                return `${label}: ${currencyFormatter.format(Math.round(value))} (Loan Paid: ${paidPercent}%)`;
-              }
-              return `${label}: ${currencyFormatter.format(Math.round(value))}`;
-            }
-          }
-        }
-      },
-      scales: {
-        x: { stacked: true, title: { display: true, text: 'Month' } },
-        y: { stacked: true, title: { display: true, text: 'EMI Components ₹' } },
-        yBalance: {
-          position: 'right',
-          title: { display: true, text: 'Remaining Balance ₹' },
-          beginAtZero: true,
-          grid: { drawOnChartArea: false }
-        }
-      }
-    }
-  });
-}
-
-function resetForm() {
-  document.getElementById('loan').value = '';
-  document.getElementById('rate').value = '';
-  document.getElementById('term').value = '';
-  document.getElementById('result').innerText = '';
-  if (emiChartInstance) {
-    emiChartInstance.destroy();
-    emiChartInstance = null;
-  }
-}
+})();

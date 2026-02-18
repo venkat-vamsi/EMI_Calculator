@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master EMI Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="dashboard">
+        <header>
+            <h1>EMI CALCULATOR DASHBOARD</h1>
+        </header>
+
+        <div class="top-section">
+            <div class="panel input-panel">
+                <div class="group">
+                    <label>Loan Amount (₹)</label>
+                    <input type="number" id="amountnum" value="500000">
+                    <div class="wrapper">
+                        <input type="range" id="amountrange" min="10000" max="10000000" step="10000" value="500000">
+                        <div class="labels"><span>10K</span><span>1Cr</span></div>
+                    </div>
+                </div>
+
+                <div class="group">
+                    <label>Interest Rate (% P.A.)</label>
+                    <input type="number" id="interestnum" value="10.5" step="0.1">
+                    <div class="wrapper">
+                        <input type="range" id="interestrange" min="1" max="25" step="0.1" value="10.5">
+                        <div class="labels"><span>1%</span><span>25%</span></div>
+                    </div>
+                </div>
+
+                <div class="group">
+                    <label>Payment Term (Months)</label>
+                    <input type="number" id="tenurenum" value="60">
+                    <div class="wrapper">
+                        <input type="range" id="tenurerange" min="1" max="360" step="1" value="60">
+                        <div class="labels"><span>1 Month</span><span>360 Months</span></div>
+                    </div>
+                </div>
+
+                <button onclick="calculateAll()" class="calc-btn">CALCULATE</button>
+            </div>
+
+            <div class="panel result-panel">
+                <h2>Monthly EMI</h2>
+                <input type="text" id="emiDisplay" value="₹ 0" readonly>
+            </div>
+        </div>
+
+        <div class="panel middle-section">
+            <h3>EMI Repayment Breakdown</h3>
+            <div class="chart-wrap bar-wrap">
+                <canvas id="barChart"></canvas>
+            </div>
+        </div>
+
+        <div class="bottom-section">
+            <div class="panel gauge-panel">
+                <h3>Loan Category</h3>
+                <div class="speedometer">
+                    <div class="needle" id="needle"></div>
+                    <div class="center"></div>
+                </div>
+                <div class="gauge-labels">
+                    <div class="label">Small<br>0-5L</div>
+                    <div class="label">Medium<br>5-25L</div>
+                    <div class="label">Large<br>25L-1Cr</div>
+                    <div class="label">Mega<br>1Cr+</div>
+                </div>
+                <div class="category-info" id="categoryName">Standard Loan</div>
+            </div>
+
+            <div class="panel pie-panel">
+                <h3>Principal vs Interest</h3>
+                <div class="chart-wrap pie-wrap">
+                    <canvas id="pieChart"></canvas>
+                </div>
+            </div>
+
+            <div class="panel table-panel">
+                <h3>Amortization Table</h3>
+                <div class="table-container">
+                    <table id="amortizationTable">
+                        <thead>
+                            <tr>
+                                <th>Year</th>
+                                <th>Total Payment</th>
+                                <th>Interest</th>
+                                <th>Principal</th>
+                                <th>Balance</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
