@@ -17,7 +17,8 @@ let barChartInstance = null;
 let pieChartInstance = null;
 
 //3. Master Calculate Function
-function calculateAll() {
+function calculateAll()
+{
     const P = parseFloat(document.getElementById('amountnum').value);
     const annualRate = parseFloat(document.getElementById('interestnum').value);
     const n = parseInt(document.getElementById('tenurenum').value);
@@ -38,12 +39,11 @@ function calculateAll() {
     }
 
     const r = annualRate / 12 / 100;
-    
     const emi = P * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
     const totalPayment = emi * n;
     const totalInterest = totalPayment - P;
 
-    document.getElementById('emiDisplay').value = "₹ " + emi.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    document.getElementById('emiDisplay').value = emi.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
 
     updateSpeedometer(P);
     updatePieChart(P, totalInterest);
@@ -110,7 +110,6 @@ function updatePieChart(principal, interest) {
 function updateBarChart(P, r, n, emi) {
     const ctx = document.getElementById('barChart').getContext('2d');
     
-    // Generate arrays for graph
     const labels = [], principalArr = [], interestArr = [], balanceArr = [];
     let balance = P;
     
