@@ -280,11 +280,11 @@ function downloadPDF() {
     pdfBtn.style.display = 'none';
 
     const opt = {
-        margin:       [0.5, 0.5, 0.5, 0.5],
+        margin:       [0.1, 0.1, 0.1, 0.1],
         filename:     'EMI_Dashboard_Report.pdf',
-        image:        { type: 'jpeg', quality: 0.98 },
+        image:        { type: 'jpeg', quality: 1 },
         html2canvas:  { scale: 2, useCORS: true },
-        jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+        jsPDF:        { unit: 'in', format: 'a4', orientation: 'landscape' }
     };
 
     html2pdf().set(opt).from(element).save().then(() => {
