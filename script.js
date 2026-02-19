@@ -1,4 +1,4 @@
-// --- 1. Input Sync Logic ---
+//1. Input System Logic
 const pairs = [
     { num: 'amountnum', range: 'amountrange' },
     { num: 'interestnum', range: 'interestrange' },
@@ -12,55 +12,66 @@ pairs.forEach(pair => {
     range.addEventListener("input", () => { num.value = range.value; });
 });
 
-// --- 2. Global Chart Instances ---
+//2. Global Chart Instances
 let barChartInstance = null;
 let pieChartInstance = null;
 
-// --- 3. Master Calculate Function ---
+//3. Master Calculate Function
 function calculateAll() {
     const P = parseFloat(document.getElementById('amountnum').value);
     const annualRate = parseFloat(document.getElementById('interestnum').value);
-    
-    // Fixed: Now directly taking input as Months
     const n = parseInt(document.getElementById('tenurenum').value);
 
-    if (!P || !annualRate || !n) {
-        alert("Please enter valid positive numbers for all fields.");
+    if (isNaN(P) || P < 10000 || P > 10000000) {
+        alert("Invalid Loan Amount. Please enter a value between ₹10,000 and ₹1,00,00,000 (1 Crore).");
+        return;
+    }
+
+    if (isNaN(annualRate) || annualRate < 1 || annualRate > 25) {
+        alert("Invalid Interest Rate. Please enter a value between 1% and 25%.");
+        return;
+    }
+
+    if (isNaN(n) || n < 1 || n > 360) {
+        alert("Invalid Payment Term. Please enter a value between 1 and 360 months.");
         return;
     }
 
     const r = annualRate / 12 / 100;
     
-    // Calculate EMI
     const emi = P * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
     const totalPayment = emi * n;
     const totalInterest = totalPayment - P;
 
-    // Display EMI
     document.getElementById('emiDisplay').value = "₹ " + emi.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
 
-    // Trigger updates for all modules
     updateSpeedometer(P);
     updatePieChart(P, totalInterest);
     updateBarChart(P, r, n, emi);
     generateTable(P, r, n, emi);
 }
 
-// --- 4. Speedometer / Loan Category Logic ---
+//4. Speedometer / Loan Category Logic
 function updateSpeedometer(amount) {
     let categoryName = "Small Loan";
-    let rotation = -90; // Default (0L)
-
-    if (amount <= 500000) { // Small: 0-5L
+    let rotation = -90;
+    if (amount <= 500000)
+    {
         categoryName = "Small Loan (0 - ₹5L)";
         rotation = -90 + (amount / 500000) * 45;
-    } else if (amount <= 2500000) { // Medium: 5-25L
+    }
+    else if (amount <= 2500000)
+    {
         categoryName = "Medium Loan (₹5L - ₹25L)";
         rotation = -45 + ((amount - 500000) / 2000000) * 45;
-    } else if (amount <= 10000000) { // Large: 25L-1Cr
+    }
+    else if (amount <= 10000000)
+    {
         categoryName = "Large Loan (₹25L - ₹1Cr)";
         rotation = 0 + ((amount - 2500000) / 7500000) * 45;
-    } else { // Mega: 1Cr+
+    }
+    else
+    {
         categoryName = "Mega Loan (₹1Cr+)";
         rotation = 45 + Math.min(((amount - 10000000) / 50000000), 1) * 45; 
     }
@@ -69,11 +80,11 @@ function updateSpeedometer(amount) {
     document.getElementById('categoryName').innerText = categoryName;
 }
 
-// --- 5. Pie Chart Logic ---
+//5. Pie Chart Logic
 function updatePieChart(principal, interest) {
     const ctx = document.getElementById('pieChart').getContext('2d');
     
-    if (pieChartInstance) pieChartInstance.destroy(); // Clear old chart
+    if (pieChartInstance) pieChartInstance.destroy();
     
     pieChartInstance = new Chart(ctx, {
         type: 'pie',
@@ -94,23 +105,33 @@ function updatePieChart(principal, interest) {
     });
 }
 
-// --- 6. Bar Chart Logic ---
+//6. Bar Chart Logic
 function updateBarChart(P, r, n, emi) {
     const ctx = document.getElementById('barChart').getContext('2d');
     
     // Generate arrays for graph
-    const labels = [], principalArr = [], interestArr = [], emiArr = [];
+    const labels = [], principalArr = [], interestArr = [], balanceArr = [];
     let balance = P;
     
-    for (let m = 1; m <= n; m++) {
+    for (let m = 1; m <= n; m++)
+    {
         let interest = balance * r;
         let principal = emi - interest;
-        balance -= principal;
+        
+        if (m === n)
+        {
+            principal = balance;
+            balance = 0;
+        }
+        else
+        {
+            balance -= principal;
+        }
 
         labels.push(String(m));
         principalArr.push(principal.toFixed(0));
         interestArr.push(interest.toFixed(0));
-        emiArr.push(emi.toFixed(0));
+        balanceArr.push(Math.max(0, balance).toFixed(0));
     }
 
     if (barChartInstance) barChartInstance.destroy();
@@ -120,23 +141,64 @@ function updateBarChart(P, r, n, emi) {
         data: {
             labels: labels,
             datasets: [
-                { label: 'Principal', data: principalArr, backgroundColor: '#355872', stack: 'Stack 1' },
-                { label: 'Interest', data: interestArr, backgroundColor: '#9CD5FF', stack: 'Stack 1' },
-                { label: 'EMI Trend', data: emiArr, type: 'line', borderColor: '#d63031', backgroundColor: 'transparent', fill: false, pointRadius: 0 }
+                { 
+                    label: 'Principal', 
+                    data: principalArr, 
+                    backgroundColor: '#355872', 
+                    stack: 'Stack 1',
+                    yAxisID: 'y' // Link to left axis
+                },
+                { 
+                    label: 'Interest', 
+                    data: interestArr, 
+                    backgroundColor: '#9CD5FF', 
+                    stack: 'Stack 1',
+                    yAxisID: 'y' // Link to left axis
+                },
+                { 
+                    label: 'Remaining Balance', 
+                    data: balanceArr, 
+                    type: 'line', 
+                    borderColor: '#d63031', 
+                    backgroundColor: 'transparent', 
+                    fill: false, 
+                    pointRadius: 0,
+                    borderWidth: 2.5,
+                    yAxisID: 'y1' // Link to right axis
+                }
             ]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            interaction: {
+                mode: 'index',
+                intersect: false,
+            },
             scales: {
-                x: { stacked: true },
-                y: { stacked: true, beginAtZero: true }
+                x: { 
+                    stacked: true 
+                },
+                y: { 
+                    stacked: true, 
+                    beginAtZero: true,
+                    position: 'left',
+                    title: { display: true, text: 'Monthly Payment (₹)' }
+                },
+                y1: {
+                    beginAtZero: true,
+                    position: 'right',
+                    title: { display: true, text: 'Remaining Balance (₹)' },
+                    grid: {
+                        drawOnChartArea: false
+                    }
+                }
             }
         }
     });
 }
 
-// --- 7. Amortization Table Logic ---
+//7. Amortization Table Logic
 function generateTable(P, r, n, emi) {
     const tableBody = document.getElementById('tableBody');
     tableBody.innerHTML = "";
@@ -207,5 +269,4 @@ function toggleMonths(yearNum, btn) {
     }
 }
 
-// Run calculation once on page load to populate default view
 window.onload = calculateAll;
