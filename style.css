@@ -1,7 +1,7 @@
 /* Color Palette: #D1D3D4 (BG), #355872 (Primary Dark), #9CD5FF (Accent Light) */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #D1D3D4;
+    background-color: #eff6f9;
     margin: 0;
     padding: 20px;
     color: #333;
@@ -50,7 +50,7 @@ h2, h3 {
     flex-direction: column; 
     justify-content: center; 
     align-items: center; 
-    background-color: #9CD5FF; 
+    background-color: #c8deed; 
 }
 
 .bottom-section {

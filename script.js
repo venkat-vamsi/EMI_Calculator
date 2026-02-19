@@ -165,10 +165,10 @@ function generateTable(P, r, n, emi) {
             
             monthRows += `<tr class="month-row year-${yearCounter}" style="display: none;">
                 <td style="text-align:left; padding-left: 30px;">${monthLabel}</td>
-                <td>${emi.toFixed(0)}</td>
-                <td>${interest.toFixed(0)}</td>
-                <td>${principal.toFixed(0)}</td>
-                <td>${Math.max(0, balance).toFixed(0)}</td>
+                <td>₹${emi.toFixed(0)}</td>
+                <td>₹${interest.toFixed(0)}</td>
+                <td>₹${principal.toFixed(0)}</td>
+                <td>₹${Math.max(0, balance).toFixed(0)}</td>
             </tr>`;
             
             currentDate.setMonth(currentDate.getMonth() + 1);
@@ -182,10 +182,10 @@ function generateTable(P, r, n, emi) {
                 <span class="toggle-btn" onclick="toggleMonths(${yearCounter}, this)">+</span>
                 ${yearCounter} (${currentCalendarYear})
             </td>
-            <td>${yearlyTotalPayment.toFixed(0)}</td>
-            <td>${yearlyInterest.toFixed(0)}</td>
-            <td>${yearlyPrincipal.toFixed(0)}</td>
-            <td>${Math.max(0, balance).toFixed(0)}</td>
+            <td>₹${yearlyTotalPayment.toFixed(0)}</td>
+            <td>₹${yearlyInterest.toFixed(0)}</td>
+            <td>₹${yearlyPrincipal.toFixed(0)}</td>
+            <td>₹${Math.max(0, balance).toFixed(0)}</td>
         `;
         
         tableBody.appendChild(yearRow);
