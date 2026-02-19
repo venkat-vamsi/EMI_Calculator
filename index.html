@@ -6,9 +6,10 @@
     <title>Master EMI Dashboard</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
-    <div class="dashboard">
+    <div class="dashboard" id="dashboard-content">
         <header class="top-navbar">
         <div class="nav-container">
             <div class="nav-logo">
@@ -50,10 +51,11 @@
                 </div>
 
                 <button onclick="calculateAll()" class="calc-btn">CALCULATE</button>
+                <button onclick="downloadPDF()" class="pdf-btn" id="pdfBtn" style="display: none;">DOWNLOAD PDF REPORT</button>
             </div>
 
             <div class="panel result-panel">
-                <h2>Monthly EMI</h2>
+                <h2 id="resultHeading">Monthly EMI</h2>
                 <input type="text" id="emiDisplay" value="₹ 0" readonly>
             </div>
         </div>

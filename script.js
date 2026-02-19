@@ -49,6 +49,7 @@ function calculateAll() {
     updatePieChart(P, totalInterest);
     updateBarChart(P, r, n, emi);
     generateTable(P, r, n, emi);
+    document.getElementById('pdfBtn').style.display = "block";
 }
 
 //4. Speedometer / Loan Category Logic
@@ -164,7 +165,7 @@ function updateBarChart(P, r, n, emi) {
                     fill: false, 
                     pointRadius: 0,
                     borderWidth: 2.5,
-                    yAxisID: 'y1' // Link to right axis
+                    yAxisID: 'y1'
                 }
             ]
         },
@@ -268,5 +269,28 @@ function toggleMonths(yearNum, btn) {
         }
     }
 }
+//8. PDF Generation Logic
+function downloadPDF() {
+    // Select the dashboard container we want to capture
+    const element = document.getElementById('dashboard-content');
+    
+    // Temporarily hide the buttons so they don't appear in the final PDF
+    const calcBtn = document.querySelector('.calc-btn');
+    const pdfBtn = document.getElementById('pdfBtn');
+    calcBtn.style.display = 'none';
+    pdfBtn.style.display = 'none';
 
+    const opt = {
+        margin:       [0.5, 0.5, 0.5, 0.5],
+        filename:     'EMI_Dashboard_Report.pdf',
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, useCORS: true },
+        jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+    };
+
+    html2pdf().set(opt).from(element).save().then(() => {
+        calcBtn.style.display = 'block';
+        pdfBtn.style.display = 'block';
+    });
+}
 window.onload = calculateAll;
